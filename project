@@ -1,0 +1,52 @@
+	             import requests
+from bs4 import BeautifulSoup
+import json
+import csv
+
+# url = "https://www.avito.ru/"
+# req = requests.get(url).text
+# with open('avito.html', 'w', encoding = 'utf-8') as file:
+#     file.write(req)
+#
+# with open('avito.html', "r", encoding = "utf-8") as file:
+#      src = file.read()
+#
+# soup = BeautifulSoup(src, "lxml")
+# all_stranica = soup.find_all(class_ = "link-link-MbQDP link-design-default-_nSbv link-novisited-UCnee category-with-counters-link-xshq8")
+# all_categories = {}
+# for item in all_stranica:
+#     item_text = item.text
+#     item_href = "https://www.avito.ru/" + item.get('href')
+#     all_categories[item_text] = item_href
+#
+# with open("all_cdtegories.json", 'w', encoding = "utf-8") as file:
+#     json.dump(all_categories, file, indent = 5, ensure_ascii = False)
+#
+with open("all_cdtegories.json", 'r', encoding = "utf-8") as file:
+     all_categories = json.load(file)
+
+print("Что вы хотите найти?")
+print("Если Личные вещи введите 1", '\n', "Если Транспорт введите 2", '\n', "Если работу введите 3")
+categories = int(input())
+
+zagolovki = []
+for zag in all_categories:
+    zagolovki.append(zag)
+
+url = all_categories[zagolovki[categories-1]]
+print(url)
+req = requests.get(url)
+src = req.text
+with open('avito_categories.html', 'w', encoding = 'utf-8') as file:
+    file.write(src)
+
+with open('avito_categories.html', "r", encoding = "utf-8") as file:
+     src = file.read()
+
+soup = BeautifulSoup(src, "lxml")
+all_stranica = soup.find_all(class_ = "iva-item-root-_lk9K photo-slider-slider-S15A_ iva-item-list-rfgcH iva-item-redesign-rop6P iva-item-responsive-_lbhG iva-item-ratingsRedesign-ydZfp items-item-My3ih items-listItem-Gd1jN js-catalog-item-enum")
+for item in all_stranica:
+    url = item.find(class_="iva-item-titleStep-pdebR").text.get('href')
+    print(url)
+
+# with open("veshi.csv", 'w', encoding = 'utf-8') as file:
